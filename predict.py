@@ -6,7 +6,7 @@ import random
 
 from data_prep import StanfordDataset
 from model import load_model
-from consts import model_path, device, img_dir, annot_dir
+from consts import model_path, device, img_dir
 
 
 def draw_bndbox(img, bnd):
@@ -25,7 +25,7 @@ transforms = Compose([
     Resize((224, 224)),
     ConvertImageDtype(torch.float32),
 ])
-stanford_dataset = StanfordDataset(img_dir, annot_dir, transforms)
+stanford_dataset = StanfordDataset(img_dir, transforms)
 
 
 for _ in range(10):

@@ -15,7 +15,7 @@ transforms = Compose([
     # Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
 ])
 
-stanford_dataset = StanfordDataset(img_dir, annot_dir, transforms)
+stanford_dataset = StanfordDataset(img_dir, transforms)
 train_data = DataLoader(dataset=stanford_dataset, batch_size=BATCH_SIZE, shuffle=True, pin_memory=True)
 
 
