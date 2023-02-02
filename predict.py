@@ -6,15 +6,23 @@ import random
 
 from data_prep import StanfordDataset
 from model import load_model
-from consts import model_path, device, img_dir
+from consts import model_path, img_dir
 
 
-def draw_bndbox(img, bnd):
+device = torch.device('cpu')
+
+def draw_bndbox(img, bnd, title=''):
+    fig, axs = plt.subplots(1, 2)
     img = img.squeeze()
     img, bnd = torch.clamp(img * 224, 0, 224).type(torch.uint8), torch.clamp(bnd * 224, 0, 224).type(torch.uint8)
-    img = utils.draw_bounding_boxes(img, bnd, width=3, colors=(0, 255, 0))
-    plt.imshow(img.permute(1, 2, 0))
-    plt.show()
+
+    img_bnd = utils.draw_bounding_boxes(img, bnd, width=3, colors=(0, 255, 0))
+
+    axs[0].imshow(img.permute(1, 2, 0))
+    axs[0].title.set_text('Input')
+    axs[1].imshow(img_bnd.permute(1, 2, 0))
+    axs[1].title.set_text('Output')
+    plt.savefig(f'{title}.png')
 
 
 model = load_model(device)
@@ -28,11 +36,11 @@ transforms = Compose([
 stanford_dataset = StanfordDataset(img_dir, transforms)
 
 
-for _ in range(10):
+for i in range(10):
     idx = random.randint(0, len(stanford_dataset))
     img, bndbox = stanford_dataset[idx]
     img, bndbox = img.unsqueeze(0).to(device), bndbox.unsqueeze(0).to(device)
 
     pred = model(img)
 
-    draw_bndbox(img, pred)
+    draw_bndbox(img, pred, f'output_{i}')

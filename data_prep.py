@@ -10,7 +10,10 @@ class StanfordDataset(Dataset):
         self.img_dir = img_dir
         self.transform = transform
 
-        self.data = pd.read_csv('data.csv')
+        df = pd.read_csv('data.csv')
+        df['paths'] = df['paths'].str.replace('\\', os.path.sep, regex=False)
+
+        self.data = df
 
     def __len__(self):
         return self.data.shape[0]
